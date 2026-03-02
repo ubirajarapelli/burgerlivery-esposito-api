@@ -24,7 +24,6 @@ import { AuthModule } from './auth/auth.module';
       type: 'sqlite',
       // database: 'pizzaria.db',
       database: process.env.DB_TURSO_URL,
-      password: process.env.DB_TURSO_TOKEN,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
