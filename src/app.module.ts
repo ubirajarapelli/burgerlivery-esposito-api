@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import * as path from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   I18nModule,
@@ -17,6 +18,7 @@ import { UserModule } from './user/user.module';
 // import { AuthController } from './auth/auth.controller';
 // import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
+import { OfferGalleryModule } from './offer-gallery/offer-gallery.module';
 
 @Module({
   imports: [
@@ -44,12 +46,17 @@ import { AuthModule } from './auth/auth.module';
         HeaderResolver,
       ],
     }),
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'public'),
+      serveRoot: '/', // opcional
+    }),
     PizzasModule,
     BeverageModule,
     DessertModule,
     OrderModule,
     UserModule,
     AuthModule,
+    OfferGalleryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
