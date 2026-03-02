@@ -1,0 +1,5 @@
+{
+    "errors": {
+        "existingUser": "Já existe usuário com este email ou CPF"
+    }
+}

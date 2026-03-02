@@ -1,0 +1,5 @@
+{
+  "error": {
+    "notFound": "Pizza com id {id} não encontrada."
+  }
+}

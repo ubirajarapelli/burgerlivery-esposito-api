@@ -1,0 +1,5 @@
+{
+    "errors": {
+        "existingUser": "There is already a user with this email or CPF"
+    }
+}
