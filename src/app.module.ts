@@ -21,11 +21,16 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'sqlite',
+      type: 'postgres',
       // database: 'pizzaria.db',
-      database: process.env.DB_TURSO_URL,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      // entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      // synchronize: true, // usar true só em estudo
+      url: process.env.DB_NEON_POSTGRES_URL,
       synchronize: true,
+      autoLoadEntities: true,
+      ssl: {
+        rejectUnauthorized: false,
+      },
     }),
     I18nModule.forRoot({
       fallbackLanguage: 'pt-BR',
