@@ -33,7 +33,13 @@ export class Order {
   @JoinTable()
   desserts: Dessert[];
 
-  @Column('decimal')
+  @Column({
+    type: 'decimal',
+    transformer: {
+      to: (v: number) => v,
+      from: (v: string) => Number(v),
+    },
+  })
   totalValue: number;
 
   @Column()

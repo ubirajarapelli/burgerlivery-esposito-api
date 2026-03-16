@@ -18,6 +18,12 @@ export class Dessert {
   @Column()
   image: string;
 
-  @Column('decimal')
+  @Column({
+    type: 'decimal',
+    transformer: {
+      to: (v: number) => v,
+      from: (v: string) => Number(v),
+    },
+  })
   value: number;
 }
