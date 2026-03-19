@@ -29,18 +29,18 @@ export class PizzasController {
     return this.pizzasService.findAll();
   }
 
+  @Get('search')
+  @ApiQuery({ name: 'query', required: true, example: 'calabresa' })
+  search(@Query('query') query: string): Promise<Pizza[] | null> {
+    return this.pizzasService.searchByName(query);
+  }
+
   @Get(':id')
   @ApiNotFoundResponse({
     description: 'Check custom message in service layer',
   })
   findOne(@Param('id') id: number): Promise<Pizza | null> {
     return this.pizzasService.findOne(Number(id));
-  }
-
-  @Get('search')
-  @ApiQuery({ name: 'query', required: true, example: 'calabresa' })
-  search(@Query('query') query: string): Promise<Pizza[] | null> {
-    return this.pizzasService.searchByName(query);
   }
 
   @UseGuards(AuthGuard('jwt'))
