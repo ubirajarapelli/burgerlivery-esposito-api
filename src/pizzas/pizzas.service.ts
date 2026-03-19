@@ -70,4 +70,10 @@ export class PizzasService {
       where: { category },
     });
   }
+
+  async searchByName(name: string): Promise<Pizza[] | null> {
+    return this.pizzaRepository.find({
+      where: { name },
+    });
+  }
 }

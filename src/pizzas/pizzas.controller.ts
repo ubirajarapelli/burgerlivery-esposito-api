@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Query,
   Delete,
   Param,
   Body,
@@ -14,7 +15,7 @@ import { PizzasService } from './pizzas.service';
 import { Pizza } from './pizza.entity';
 import { CreatePizzaDto } from './dto/createPizza.dto';
 import { UpdatePizzaDto } from './dto/updatePizza.dto';
-import { ApiNotFoundResponse } from '@nestjs/swagger';
+import { ApiNotFoundResponse, ApiQuery } from '@nestjs/swagger';
 
 @Controller('pizzas')
 export class PizzasController {
@@ -34,6 +35,15 @@ export class PizzasController {
   })
   findOne(@Param('id') id: number): Promise<Pizza | null> {
     return this.pizzasService.findOne(Number(id));
+  }
+
+  //   import { Controller, Get, Query } from '@nestjs/common';
+  // import { ApiQuery } from '@nestjs/swagger';
+
+  @Get('search')
+  @ApiQuery({ name: 'q', required: true, example: 'calabresa' })
+  search(@Query('q') q: string): Promise<Pizza[] | null> {
+    return this.pizzasService.searchByName(q);
   }
 
   @UseGuards(AuthGuard('jwt'))
