@@ -37,13 +37,10 @@ export class PizzasController {
     return this.pizzasService.findOne(Number(id));
   }
 
-  //   import { Controller, Get, Query } from '@nestjs/common';
-  // import { ApiQuery } from '@nestjs/swagger';
-
   @Get('search')
-  @ApiQuery({ name: 'q', required: true, example: 'calabresa' })
-  search(@Query('q') q: string): Promise<Pizza[] | null> {
-    return this.pizzasService.searchByName(q);
+  @ApiQuery({ name: 'query', required: true, example: 'calabresa' })
+  search(@Query('query') query: string): Promise<Pizza[] | null> {
+    return this.pizzasService.searchByName(query);
   }
 
   @UseGuards(AuthGuard('jwt'))

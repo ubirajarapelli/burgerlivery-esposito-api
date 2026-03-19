@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { I18nService } from 'nestjs-i18n';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { Pizza } from './pizza.entity';
 import { CreatePizzaDto } from './dto/createPizza.dto';
 import { UpdatePizzaDto } from './dto/updatePizza.dto';
@@ -72,8 +72,12 @@ export class PizzasService {
   }
 
   async searchByName(name: string): Promise<Pizza[] | null> {
+    const term = name?.trim();
+
+    if (!term) return null;
+
     return this.pizzaRepository.find({
-      where: { name },
+      where: { name: ILike(`%${term}%`) },
     });
   }
 }
