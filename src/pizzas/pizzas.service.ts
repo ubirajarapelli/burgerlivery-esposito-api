@@ -71,28 +71,28 @@ export class PizzasService {
     });
   }
 
-  // async searchByName(name: string): Promise<Pizza[] | null> {
-  //   const term = name?.trim();
+  async searchByName(name: string): Promise<Pizza[] | null> {
+    const term = name?.trim();
 
-  //   if (!term) return [];
+    if (!term) return [];
 
-  //   return this.pizzaRepository.find({
-  //     where: { name: ILike(`%${term}%`) },
-  //   });
-  // }
-
-  async searchByName(name: string): Promise<Pizza[]> {
-    try {
-      const term = name?.trim();
-
-      if (!term) return [];
-
-      return await this.pizzaRepository.find({
-        where: { name: ILike(`%${term}%`) },
-      });
-    } catch (error) {
-      console.error('ERRO NA BUSCA:', error);
-      throw error;
-    }
+    return this.pizzaRepository.find({
+      where: { name: ILike(`%${term}%`) },
+    });
   }
+
+  // async searchByName(name: string): Promise<Pizza[]> {
+  //   try {
+  //     const term = name?.trim();
+
+  //     if (!term) return [];
+
+  //     return await this.pizzaRepository.find({
+  //       where: { name: ILike(`%${term}%`) },
+  //     });
+  //   } catch (error) {
+  //     console.error('ERRO NA BUSCA:', error);
+  //     throw error;
+  //   }
+  // }
 }
