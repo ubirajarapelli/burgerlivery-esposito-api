@@ -32,7 +32,16 @@ export class CreateUserDto {
   @IsString()
   role: string;
 
-  @ApiProperty({ example: 'customer' })
+  @ApiProperty({
+    example: {
+      cep: '68906127',
+      street: 'Avenida China',
+      number: '603',
+      neighborhood: 'Cabralzinho',
+      city: 'Macapá',
+      state: 'AP',
+    },
+  })
   @IsOptional()
   @IsString()
   address?: AddressDto;
