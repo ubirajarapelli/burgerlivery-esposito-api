@@ -22,7 +22,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   cpf: string;
 
   @Column({ nullable: true })
