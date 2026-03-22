@@ -52,6 +52,11 @@ export class UserService {
     return this.userRepository.findOneBy({ id });
   }
 
+  async updateAddress(id: string, user: Partial<User>): Promise<User | null> {
+    await this.userRepository.save(user);
+    return this.userRepository.findOneBy({ id });
+  }
+
   async updatePassword(id: string, newPassword: string): Promise<User | null> {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await this.userRepository.update(id, { password: hashedPassword });

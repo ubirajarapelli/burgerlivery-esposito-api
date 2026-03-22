@@ -44,6 +44,14 @@ export class UserController {
     return this.userService.update(id, usuario);
   }
 
+  @Put(':id/address')
+  updateAddress(
+    @Param('id') id: string,
+    @Body() usuario: Partial<User>,
+  ): Promise<User | null> {
+    return this.userService.updateAddress(id, usuario);
+  }
+
   @Put(':id/reset-password')
   updatePassword(
     @Param('id') id: string,
