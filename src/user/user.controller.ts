@@ -29,7 +29,7 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Post()
   create(@Body() user: CreateUserDto): Promise<User> {
     return this.userService.create(user);
