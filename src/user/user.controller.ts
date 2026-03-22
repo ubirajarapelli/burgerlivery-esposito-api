@@ -23,7 +23,7 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   findOne(@Param('id') id: string): Promise<User | null> {
     return this.userService.findOne(id);
@@ -35,7 +35,7 @@ export class UserController {
     return this.userService.create(user);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   update(
     @Param('id') id: string,
