@@ -53,7 +53,19 @@ export class UserService {
   }
 
   async updateAddress(id: string, user: Partial<User>): Promise<User | null> {
-    await this.userRepository.save(user);
+    const data = await this.userRepository.findOne({
+      where: { id },
+    });
+
+    if (!data) return null;
+
+    if (user.address) {
+      data.address = {
+        ...data.address,
+        ...user.address,
+      };
+    }
+    await this.userRepository.save(data);
     return this.userRepository.findOneBy({ id });
   }
 
