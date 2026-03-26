@@ -15,16 +15,31 @@ export class AuthService {
   ) {}
 
   // LOGIN: email/senha
+  // async validateUser(email: string, password: string): Promise<User> {
+  //   const user = await this.userService.findByEmail(email);
+  //   if (
+  //     user &&
+  //     user.password &&
+  //     (bcrypt.compare(password, user.password) as any)
+  //   ) {
+  //     return user;
+  //   }
+  //   throw new UnauthorizedException('Invalid credentials');
+  // }
+
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.userService.findByEmail(email);
-    if (
-      user &&
-      user.password &&
-      (bcrypt.compare(password, user.password) as any)
-    ) {
-      return user;
+
+    if (!user?.password) {
+      throw new UnauthorizedException('Invalid credentials');
     }
-    throw new UnauthorizedException('Invalid credentials');
+
+    const ok = await bcrypt.compare(password, user.password);
+    if (!ok) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return user;
   }
 
   async login(dto: AuthLoginDto) {

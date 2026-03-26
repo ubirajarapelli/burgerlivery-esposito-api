@@ -65,13 +65,13 @@ export class PizzasService {
     return pizza;
   }
 
-  async findByCategory(category: string): Promise<Pizza[] | null> {
+  async findByCategory(category: string): Promise<Pizza[]> {
     return this.pizzaRepository.find({
       where: { category },
     });
   }
 
-  async searchByName(name: string): Promise<Pizza[] | null> {
+  async searchByName(name: string): Promise<Pizza[]> {
     const term = name?.trim();
 
     if (!term) return [];
@@ -80,19 +80,4 @@ export class PizzasService {
       where: { name: ILike(`%${term}%`) },
     });
   }
-
-  // async searchByName(name: string): Promise<Pizza[]> {
-  //   try {
-  //     const term = name?.trim();
-
-  //     if (!term) return [];
-
-  //     return await this.pizzaRepository.find({
-  //       where: { name: ILike(`%${term}%`) },
-  //     });
-  //   } catch (error) {
-  //     console.error('ERRO NA BUSCA:', error);
-  //     throw error;
-  //   }
-  // }
 }

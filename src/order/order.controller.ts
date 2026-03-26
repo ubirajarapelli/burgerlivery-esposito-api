@@ -24,6 +24,12 @@ export class OrderController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('user/:userId')
+  findByUser(@Param('userId') userId: string): Promise<Order[]> {
+    return this.orderService.findByUser(userId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   findOne(@Param('id') id: number): Promise<Order | null> {
     return this.orderService.findOne(Number(id));
