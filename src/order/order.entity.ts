@@ -5,6 +5,7 @@ import {
   Column,
   ManyToMany,
   JoinTable,
+  CreateDateColumn,
 } from 'typeorm';
 import { Pizza } from '../pizzas/pizza.entity';
 import { Dessert } from '../dessert/dessert.entity';
@@ -44,4 +45,7 @@ export class Order {
 
   @Column()
   deliveryAddress: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

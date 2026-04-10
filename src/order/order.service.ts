@@ -31,9 +31,24 @@ export class OrderService {
     return this.orderRepository.findOneBy({ id });
   }
 
-  findByUser(userId: string): Promise<Order[]> {
-    return this.orderRepository.find({
+  async findByUser(userId: string) {
+    const orders = await this.orderRepository.find({
       where: { userId },
+      relations: ['pizzas', 'beverages', 'desserts'],
+    });
+
+    return orders.map((order) => {
+      const allItems = [...order.pizzas, ...order.beverages, ...order.desserts];
+      const mostExpensive = allItems.reduce(
+        (max, item) => (item.value > max.value ? item : max),
+        allItems[0],
+      );
+
+      return {
+        ...order,
+        createdAt: order.createdAt,
+        mostExpensiveItemImage: mostExpensive?.image ?? null,
+      };
     });
   }
 
