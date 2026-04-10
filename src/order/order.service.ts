@@ -34,6 +34,7 @@ export class OrderService {
   async findByUser(userId: string) {
     const orders = await this.orderRepository.find({
       where: { userId },
+      order: { createdAt: 'DESC' },
       relations: ['pizzas', 'beverages', 'desserts'],
     });
 
@@ -87,7 +88,7 @@ export class OrderService {
       desserts,
       totalValue,
       deliveryAddress: createOrderDto.deliveryAddress,
-      status: 'aberto', // valor default, pode ajustar conforme contexto
+      status: 'preparation', // valor default, pode ajustar conforme contexto
     });
 
     return this.orderRepository.save(order);
