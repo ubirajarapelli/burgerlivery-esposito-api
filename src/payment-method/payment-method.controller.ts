@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiTags,
@@ -6,7 +6,9 @@ import {
   ApiOkResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { PaymentMethodService, PaymentMethod } from './payment-method.service';
+import { PaymentMethodService } from './payment-method.service';
+import type { PaymentMethod, PixResponse } from './payment-method.service';
+import { PixDto } from './dto/pix.dto';
 
 @ApiTags('payment-methods')
 @ApiBearerAuth()
@@ -34,5 +36,26 @@ export class PaymentMethodController {
   })
   findAll(): PaymentMethod[] {
     return this.paymentMethodService.findAll();
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('pix')
+  @ApiOperation({ summary: 'Gera o código PIX copia e cola (simulação)' })
+  @ApiOkResponse({
+    description: 'Código PIX gerado com sucesso',
+    schema: {
+      type: 'object',
+      properties: {
+        copyPaste: {
+          type: 'string',
+          example: '00020126330014BR.GOV.BCB.PIX...',
+        },
+        amount: { type: 'number', example: 49.9 },
+        transactionId: { type: 'string', example: 'PIX1713200000000' },
+      },
+    },
+  })
+  generatePix(@Body() pixDto: PixDto): PixResponse {
+    return this.paymentMethodService.generatePix(pixDto);
   }
 }
