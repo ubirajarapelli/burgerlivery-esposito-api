@@ -19,6 +19,7 @@ import { UserModule } from './user/user.module';
 // import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { OfferGalleryModule } from './offer-gallery/offer-gallery.module';
+import { PaymentMethodModule } from './payment-method/payment-method.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { OfferGalleryModule } from './offer-gallery/offer-gallery.module';
     UserModule,
     AuthModule,
     OfferGalleryModule,
+    PaymentMethodModule,
   ],
   controllers: [AppController],
   providers: [AppService],
