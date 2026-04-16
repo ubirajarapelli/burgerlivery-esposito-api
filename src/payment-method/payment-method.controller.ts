@@ -50,12 +50,17 @@ export class PaymentMethodController {
           type: 'string',
           example: '00020126330014BR.GOV.BCB.PIX...',
         },
+        qrCode: {
+          type: 'string',
+          example: 'data:image/png;base64,iVBORw0KGgo...',
+          description: 'QR Code em base64 PNG, pronto para usar em <img src="..." />',
+        },
         amount: { type: 'number', example: 49.9 },
         transactionId: { type: 'string', example: 'PIX1713200000000' },
       },
     },
   })
-  generatePix(@Body() pixDto: PixDto): PixResponse {
+  async generatePix(@Body() pixDto: PixDto): Promise<PixResponse> {
     return this.paymentMethodService.generatePix(pixDto);
   }
 }

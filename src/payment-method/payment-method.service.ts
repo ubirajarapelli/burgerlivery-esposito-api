@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { payload } from 'pix-payload';
+import * as QRCode from 'qrcode';
 import { PixDto } from './dto/pix.dto';
 
 export interface PaymentMethod {
@@ -11,6 +12,7 @@ export interface PaymentMethod {
 
 export interface PixResponse {
   copyPaste: string;
+  qrCode: string;
   amount: number;
   transactionId: string;
 }
@@ -41,7 +43,7 @@ export class PaymentMethodService {
     return PAYMENT_METHODS;
   }
 
-  generatePix(dto: PixDto): PixResponse {
+  async generatePix(dto: PixDto): Promise<PixResponse> {
     const transactionId = dto.transactionId ?? `PIX${Date.now()}`;
 
     const copyPaste = payload({
@@ -52,8 +54,12 @@ export class PaymentMethodService {
       transactionId,
     });
 
+    // PNG: lossless, ideal para QR Code (sem artefatos nas bordas preto/branco)
+    const qrCode = await QRCode.toDataURL(copyPaste, { type: 'image/png' });
+
     return {
       copyPaste,
+      qrCode,
       amount: dto.amount,
       transactionId,
     };
