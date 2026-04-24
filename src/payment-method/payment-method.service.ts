@@ -1,7 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, MessageEvent } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Observable } from 'rxjs';
 import { payload } from 'pix-payload';
 import * as QRCode from 'qrcode';
 import { PixDto } from './dto/pix.dto';
+import { Order } from '../order/order.entity';
 
 export interface PaymentMethod {
   id: number;
@@ -37,8 +41,15 @@ const PIX_CONFIG = {
   city: 'Sao Paulo',
 };
 
+const PIX_CONFIRM_DELAY_MS = 2 * 60 * 1000;
+
 @Injectable()
 export class PaymentMethodService {
+  constructor(
+    @InjectRepository(Order)
+    private orderRepository: Repository<Order>,
+  ) {}
+
   findAll(): PaymentMethod[] {
     return PAYMENT_METHODS;
   }
@@ -63,5 +74,25 @@ export class PaymentMethodService {
       amount: dto.amount,
       transactionId,
     };
+  }
+
+  watchPixPayment(
+    transactionId: string,
+    orderId: number,
+  ): Observable<MessageEvent> {
+    return new Observable((subscriber) => {
+      subscriber.next({ data: { status: 'pending', transactionId } });
+
+      const timeout = setTimeout(() => {
+        void this.orderRepository
+          .update(orderId, { status: 'paid' })
+          .then(() => {
+            subscriber.next({ data: { status: 'confirmed', transactionId } });
+            subscriber.complete();
+          });
+      }, PIX_CONFIRM_DELAY_MS);
+
+      return () => clearTimeout(timeout);
+    });
   }
 }

@@ -1,9 +1,22 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  MessageEvent,
+  Param,
+  ParseIntPipe,
+  Query,
+  Sse,
+  UseGuards,
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiTags,
   ApiOperation,
   ApiOkResponse,
+  ApiQuery,
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { PaymentMethodService } from './payment-method.service';
@@ -53,7 +66,8 @@ export class PaymentMethodController {
         qrCode: {
           type: 'string',
           example: 'data:image/png;base64,iVBORw0KGgo...',
-          description: 'QR Code em base64 PNG, pronto para usar em <img src="..." />',
+          description:
+            'QR Code em base64 PNG, pronto para usar em <img src="..." />',
         },
         amount: { type: 'number', example: 49.9 },
         transactionId: { type: 'string', example: 'PIX1713200000000' },
@@ -62,5 +76,23 @@ export class PaymentMethodController {
   })
   async generatePix(@Body() pixDto: PixDto): Promise<PixResponse> {
     return this.paymentMethodService.generatePix(pixDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Sse('pix/status/:transactionId')
+  @ApiOperation({
+    summary: 'SSE: aguarda confirmação do pagamento PIX (simulação em 2 min)',
+  })
+  @ApiQuery({
+    name: 'orderId',
+    type: Number,
+    required: true,
+    description: 'ID do pedido a ser atualizado',
+  })
+  pixStatus(
+    @Param('transactionId') transactionId: string,
+    @Query('orderId', ParseIntPipe) orderId: number,
+  ): Observable<MessageEvent> {
+    return this.paymentMethodService.watchPixPayment(transactionId, orderId);
   }
 }
